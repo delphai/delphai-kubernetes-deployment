@@ -9,10 +9,10 @@ inputs:
     description: 'Delphai Subscription Enviroment'
     required: true
 
-    
-branding:
-  icon: "chevron-up"
-  color: "blue"
 runs:
-  using: "docker"
-  image: "Dockerfile"
+  using: 'node12'
+  main: 'src/start.sh'
+branding:
+  icon: 'anchor'
+  color: 'blue'
+  

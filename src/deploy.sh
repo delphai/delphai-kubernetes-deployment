@@ -13,7 +13,7 @@ IS_PUBLIC=true
 DOMAIN=delphai.black
 
 # Get Docker
-python main.py
+python /app/src/main.py
 # Build Docker Image
 docker build -t ${IMAGE} .
 az acr login --name delphai${DELPHAI_ENVIRONMENT} --resource-group delphai-${DELPHAI_ENVIRONMENT} -p ${ACR_PASSWORD}
