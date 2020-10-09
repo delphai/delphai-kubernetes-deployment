@@ -45,8 +45,8 @@ outputs:
     description: 'Tag for the Docker image'
 
 runs:
-  using: 'node12'
-  main: 'src/start.sh'
+  using: "docker"
+  image: "Dockerfile"
 branding:
   icon: 'anchor'
   color: 'blue'
