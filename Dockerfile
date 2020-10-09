@@ -1,4 +1,4 @@
-FROM node:12.18.4
+FROM node:12
 WORKDIR /app
 COPY . /app
 ENTRYPOINT [ "/app/src/start.sh" ]
