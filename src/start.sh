@@ -21,8 +21,22 @@ az login --service-principal --username $APP_ID --password $SECRET --tenant $TEN
 az aks get-credentials -n delphai-${DELPHAI_ENVIROMENT} -g tf-cluster 
 kubectl config current-context
 # set domain
-python /app/src/domain.py
-DOMIAN=$DOMIAN
+case ${DELPHAI_ENVIROMENT} in
+
+  'common')
+    DOMIAN='delphai.red'
+    ;;
+
+  'review')
+    DOMIAN='delphai.pink'
+    ;;
+
+  'development')
+    DOMIAN='delphai.pink'
+    ;;
+
+esac
+
 # Helming
 kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl apply -f -
 kubectl patch serviceaccount default --namespace ${REPO_NAME} -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
