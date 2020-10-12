@@ -29,6 +29,10 @@ inputs:
     description: 'External URL'
     required: false
     default: 'true'
+  deployment_name:
+    description: 'Deploymnet name'
+    required: false
+
 
 runs:
   using: "docker"
