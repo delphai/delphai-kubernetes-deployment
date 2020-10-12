@@ -3,23 +3,21 @@ description: "Deploy delphai microservices to Azure kubernetes in delphai's Infr
 author: "delpahi/devops"
 inputs:
   delphai_enviroment:
-    description: 'Delphai Subscription Enviroment'
-    required: false
+    description: 'Delphai Emviroment'
+    required: true
   client_id:
-    description: 'Delphai Subscription Enviroment'
-    required: false
+    description: 'Client Id'
+    required: true
   client_secret:
-    description: 'Delphai Subscription Enviroment'
-    required: false
+    description: 'Client secret'
+    required: true
   tenant_id:
-    description: 'Delphai Subscription Enviroment'
-    required: false
-  is_puplic:
-    description: 'Delphai Subscription Enviroment'
-    required: false
+    description: 'Tenant Id'
+    required: true
+  acr_secret:
+    description: 'Registiry secret'
+    required: true
   
-  
-
 runs:
   using: "docker"
   image: "Dockerfile"
