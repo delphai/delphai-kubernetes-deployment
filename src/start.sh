@@ -49,6 +49,6 @@ helm upgrade --install --wait --atomic \
           --set httpPort=${HTTPPORT} \
           --set grpcPort=${GRPCPORT} \
           --set isPublic=true \
-          --set domain=${DOMAIN}
+          --set domain=${DOMIAN}
 
-echo -e "enviroment:${DELPHAI_ENVIROMENT},\nrepo:${REPO_NAME}-${REPO_SLUG}\nimage:${IMAGE}\ndomain:${DOMAIN}"
+echo -e "enviroment:${DELPHAI_ENVIROMENT},\nrepo:${REPO_NAME}-${REPO_SLUG}\nimage:${IMAGE}\ndomain:${DOMIAN}"
