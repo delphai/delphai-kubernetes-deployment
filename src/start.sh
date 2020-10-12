@@ -9,13 +9,13 @@ APP_ID=$INPUT_CLIENT_ID
 SECRET=$INPUT_CLIENT_SECRET
 TENANT_ID=$INPUT_TENANT_ID
 REPO_NAME=$REPOSITORY_NAME
-REPO_TAG=$GITHUB_REF_SLUG
+REPO_SLUG=$GITHUB_REF_SLUG
 IMAGE="delphai${DELPHAI_ENVIRONMENT}.azurecr.io/${REPO_NAME}:${REPO_TAG}"
 DOMAIN="delphai.red"
 HTTPPORT=$INPUT_HTTPPORT
 GRPCPORT=$INPUT_GRPCPORT
 ISPUBLIC=$INPUT_ISPUBLIC
-DEPLOYMENT_NAME=$INPUT_DEPLOYMENT_NAME
+
 
 # Login and set context
 az login --service-principal --username $APP_ID --password $SECRET --tenant $TENANT_ID
@@ -27,7 +27,7 @@ kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl a
 kubectl patch serviceaccount default --namespace ${REPO_NAME} -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 helm upgrade --install --wait --atomic \
-          ${DEPLOYMENT_NAME} \
+          ${REPO_NAME}-${REPO_SLUG} \
           delphai/delphai-knative-service \
           --namespace=${REPO_NAME} \
           --set image=${IMAGE} \
