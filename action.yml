@@ -5,6 +5,17 @@ inputs:
   delphai_enviroment:
     description: 'Delphai Subscription Enviroment'
     required: false
+  client_id:
+    description: 'Delphai Subscription Enviroment'
+    required: false
+  client_secret:
+    description: 'Delphai Subscription Enviroment'
+    required: false
+  tenant_id:
+    description: 'Delphai Subscription Enviroment'
+    required: false
+  
+  
   
 
 runs:
