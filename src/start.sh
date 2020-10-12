@@ -22,6 +22,7 @@ az aks get-credentials -n delphai-${DELPHAI_ENVIROMENT} -g tf-cluster
 kubectl config current-context
 # set domain
 python /app/src/domain.py
+DOMIAN=$DOMIAN
 # Helming
 kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl apply -f -
 kubectl patch serviceaccount default --namespace ${REPO_NAME} -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
@@ -35,3 +36,5 @@ helm upgrade --install --wait --atomic \
           --set grpcPort=${GRPCPORT} \
           --set isPublic=true \
           --set domain=${DOMAIN}
+
+echo -e "enviroment:${DELPHAI_ENVIROMENT},\nrepo:${REPO_NAME}-${REPO_SLUG}\nimage:${IMAGE}\ndomain:${DOMAIN}"
