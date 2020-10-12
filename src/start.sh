@@ -10,7 +10,7 @@ SECRET=$INPUT_CLIENT_SECRET
 TENANT_ID=$INPUT_TENANT_ID
 REPO_NAME=$REPOSITORY_NAME
 REPO_SLUG=$GITHUB_REF_SLUG
-IMAGE="delphai${DELPHAI_ENVIRONMENT}.azurecr.io/${REPO_NAME}:${REPO_TAG}"
+IMAGE="delphai${DELPHAI_ENVIRONMENT}.azurecr.io/${REPO_NAME}:${REPO_SLUG}"
 DOMAIN="delphai.red"
 HTTPPORT=$INPUT_HTTPPORT
 GRPCPORT=$INPUT_GRPCPORT
@@ -31,7 +31,5 @@ helm upgrade --install --wait --atomic \
           delphai/delphai-knative-service \
           --namespace=${REPO_NAME} \
           --set image=${IMAGE} \
-          --set httpPort=${HTTPPORT} \
-          --set grpcPort=${GRPCPORT} \
           --set isPublic=true \
           --set domain=${DOMAIN}

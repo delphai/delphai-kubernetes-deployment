@@ -24,7 +24,6 @@ inputs:
   grpcport:
     description: 'Http Port External'
     required: false
-    default: '7070'
   is_public:
     description: 'External URL'
     required: false
