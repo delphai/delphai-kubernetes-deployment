@@ -17,7 +17,19 @@ inputs:
   acr_secret:
     description: 'Registiry secret'
     required: true
-  
+  httpport:
+    description: 'Http Port External'
+    required: false
+    default: '8080'
+  grpcport:
+    description: 'Http Port External'
+    required: false
+    default: '7070'
+  is_public:
+    description: 'External URL'
+    required: false
+    default: 'true'
+
 runs:
   using: "docker"
   image: "Dockerfile"
