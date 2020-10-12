@@ -11,7 +11,6 @@ TENANT_ID=$INPUT_TENANT_ID
 REPO_NAME=$REPOSITORY_NAME
 REPO_SLUG=$GITHUB_REF_SLUG
 IMAGE="delphai${DELPHAI_ENVIRONMENT}.azurecr.io/${REPO_NAME}:${REPO_SLUG}"
-DOMAIN="delphai.red"
 HTTPPORT=$INPUT_HTTPPORT
 GRPCPORT=$INPUT_GRPCPORT
 ISPUBLIC=$INPUT_ISPUBLIC
@@ -21,7 +20,8 @@ ISPUBLIC=$INPUT_ISPUBLIC
 az login --service-principal --username $APP_ID --password $SECRET --tenant $TENANT_ID
 az aks get-credentials -n delphai-${DELPHAI_ENVIROMENT} -g tf-cluster 
 kubectl config current-context
-
+# set domain
+python /app/src/domain.py
 # Helming
 kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl apply -f -
 kubectl patch serviceaccount default --namespace ${REPO_NAME} -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
@@ -31,5 +31,7 @@ helm upgrade --install --wait --atomic \
           delphai/delphai-knative-service \
           --namespace=${REPO_NAME} \
           --set image=${IMAGE} \
+          --set httpPort=${HTTPPORT} \
+          --set grpcPort=${GRPCPORT} \
           --set isPublic=true \
           --set domain=${DOMAIN}
