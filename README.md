@@ -15,7 +15,7 @@ domains = {
     "common" : "delphai.red",
     "review" : "delphai.pink",
     "development": "delphai.black",
-    "staging"  : "delphai.live
+    "staging"  : "delphai.blue"
      
 }
 
