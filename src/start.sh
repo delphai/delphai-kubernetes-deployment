@@ -20,22 +20,9 @@ ISPUBLIC=$INPUT_ISPUBLIC
 az login --service-principal --username $APP_ID --password $SECRET --tenant $TENANT_ID
 az aks get-credentials -n delphai-${DELPHAI_ENVIROMENT} -g tf-cluster 
 kubectl config current-context
-# set domain
-case ${DELPHAI_ENVIROMENT} in
+DOMAIN=$(kubectl get secret domain -o json --namespace default | jq .data.domain -r | base64 -d)
 
-  'common')
-    DOMIAN='delphai.red'
-    ;;
 
-  'review')
-    DOMIAN='delphai.pink'
-    ;;
-
-  'development')
-    DOMIAN='delphai.pink'
-    ;;
-
-esac
 
 # Helming
 kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl apply -f -
