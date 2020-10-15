@@ -1,12 +1,9 @@
 #! /usr/bin/env bash
 
-REPO_SLUG=$1
-REPO_NAME="repo"
+REPO_NAME=$1
 
-if [ "${REPO_SLUG}" = "master" ]; then
-    RELEASE_NAME=${REPO_NAME}
-else
-    RELEASE_NAME=${REPO_NAME}-${REPO_SLUG}
+if [ "${REPO_NAME}" == "delphai-ui" ]; then
+    REPO_NAME="app"
 fi
 
-echo ${RELEASE_NAME}
+echo ${REPO_NAME}

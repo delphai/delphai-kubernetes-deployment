@@ -16,6 +16,10 @@ GRPCPORT=$INPUT_GRPCPORT
 IS_PUBLIC=$INPUT_IS_PUBLIC
 IS_UI=$INPUT_IS_UI
 
+if [ "${REPO_NAME}" == "delphai-ui" ]; then
+    REPO_NAME="app"
+fi
+
 if [ "${REPO_SLUG}" = "master" ]; then
     RELEASE_NAME=${REPO_NAME}
 else
@@ -47,7 +51,7 @@ helm upgrade --install --wait --atomic \
 
 
 
-echo -e "enviroment:${DELPHAI_ENVIROMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nimage:${IMAGE},httpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}"
+echo -e "\n\n\n\n\nenviroment:${DELPHAI_ENVIROMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nimage:${IMAGE},\nhttpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\n\n\n\n"
 echo "██████  ███████ ██      ██████  ██   ██  █████  ██ ";
 echo "██   ██ ██      ██      ██   ██ ██   ██ ██   ██ ██ ";
 echo "██   ██ █████   ██      ██████  ███████ ███████ ██ ";
