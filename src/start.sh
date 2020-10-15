@@ -13,7 +13,8 @@ REPO_SLUG=$GITHUB_REF_SLUG
 IMAGE="delphai${DELPHAI_ENVIROMENT}.azurecr.io/${REPO_NAME}:${REPO_SLUG}"
 HTTPPORT=$INPUT_HTTPPORT
 GRPCPORT=$INPUT_GRPCPORT
-ISPUBLIC=$INPUT_ISPUBLIC
+IS_PUBLIC=$INPUT_IS_PUBLIC
+IS_UI=$INPUT_IS_UI
 
 
 # Login and set context
@@ -35,7 +36,8 @@ helm upgrade --install --wait --atomic \
           --set image=${IMAGE} \
           --set httpPort=${HTTPPORT} \
           --set grpcPort=${GRPCPORT} \
-          --set isPublic=true \
+          --set isPublic=${IS_PUBLIC} \
+          --set isUi=${IS_UI}
           --set domain=${DOMAIN}
 
 echo -e "enviroment:${DELPHAI_ENVIROMENT},\nrepo:${REPO_NAME}-${REPO_SLUG}\nimage:${IMAGE}\ndomain:${DOMAIN}"

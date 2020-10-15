@@ -28,6 +28,10 @@ inputs:
     description: 'External URL'
     required: false
     default: 'true'
+  is_ui:
+    description: 'if ui repo'
+    required: false
+    default: 'false'
 
 
 
