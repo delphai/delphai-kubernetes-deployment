@@ -16,6 +16,11 @@ GRPCPORT=$INPUT_GRPCPORT
 IS_PUBLIC=$INPUT_IS_PUBLIC
 IS_UI=$INPUT_IS_UI
 
+if [ "${REPO_SLUG}" = "master" ]; then
+    RELEASE_NAME=${REPO_NAME}
+else
+    RELEASE_NAME=${REPO_NAME}-${REPO_SLUG}
+fi
 
 # Login and set context
 az login --service-principal --username $APP_ID --password $SECRET --tenant $TENANT_ID
@@ -30,7 +35,7 @@ kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl a
 kubectl patch serviceaccount default --namespace ${REPO_NAME} -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 helm upgrade --install --wait --atomic \
-          ${REPO_NAME}-${REPO_SLUG} \
+          ${RELEASE_NAME} \
           delphai/delphai-knative-service \
           --namespace=${REPO_NAME} \
           --set image=${IMAGE} \
@@ -42,7 +47,7 @@ helm upgrade --install --wait --atomic \
 
 
 
-echo -e "enviroment:${DELPHAI_ENVIROMENT},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nimage:${IMAGE},httpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}"
+echo -e "enviroment:${DELPHAI_ENVIROMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nimage:${IMAGE},httpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}"
 echo "██████  ███████ ██      ██████  ██   ██  █████  ██ ";
 echo "██   ██ ██      ██      ██   ██ ██   ██ ██   ██ ██ ";
 echo "██   ██ █████   ██      ██████  ███████ ███████ ██ ";
