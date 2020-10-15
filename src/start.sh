@@ -40,4 +40,14 @@ helm upgrade --install --wait --atomic \
           --set isUi=${IS_UI}
           --set domain=${DOMAIN}
 
-echo -e "enviroment:${DELPHAI_ENVIROMENT},\nrepo:${REPO_NAME}-${REPO_SLUG}\nimage:${IMAGE}\ndomain:${DOMAIN}"
+
+
+echo -e "enviroment:${DELPHAI_ENVIROMENT},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nimage:${IMAGE},httpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}"
+echo "██████  ███████ ██      ██████  ██   ██  █████  ██ ";
+echo "██   ██ ██      ██      ██   ██ ██   ██ ██   ██ ██ ";
+echo "██   ██ █████   ██      ██████  ███████ ███████ ██ ";
+echo "██   ██ ██      ██      ██      ██   ██ ██   ██ ██ ";
+echo "██████  ███████ ███████ ██      ██   ██ ██   ██ ██ ";
+echo "                                                   ";
+echo "                                                   ";
+sleep 2
