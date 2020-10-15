@@ -47,7 +47,8 @@ helm upgrade --install --wait --atomic \
           --set grpcPort=${GRPCPORT} \
           --set isPublic=${IS_PUBLIC} \
           --set isUi=${IS_UI} \
-          --set domain=${DOMAIN}
+          --set domain=${DOMAIN} \
+          --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
 
 
 
