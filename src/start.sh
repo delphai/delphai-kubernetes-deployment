@@ -37,7 +37,7 @@ helm upgrade --install --wait --atomic \
           --set httpPort=${HTTPPORT} \
           --set grpcPort=${GRPCPORT} \
           --set isPublic=${IS_PUBLIC} \
-          --set isUi=${IS_UI}
+          --set isUi=${IS_UI} \
           --set domain=${DOMAIN}
 
 
