@@ -31,8 +31,29 @@ az login --service-principal --username $APP_ID --password $SECRET --tenant $TEN
 az aks get-credentials -n delphai-${DELPHAI_ENVIROMENT} -g tf-cluster 
 kubectl config current-context
 DOMAIN=$(kubectl get secret domain -o json --namespace default | jq .data.domain -r | base64 -d)
+CLOUDFLARE_EMAIL=$(kubectl get secret cloudflare -o json --namespace default | jq .data.email -r | base64 -d)
+CLOUDFLARE_PASSWORD=$(kubectl get secret cloudflare -o json --namespace default | jq .data.password -r | base64 -d)
 
+if [ "${IS_UI}" == "true" ]; then
+    echo "IS UI is set to TRUE..."
+    echo "Getting Zone identifier"
+    ZONE_ID=$(curl -X GET "https://api.cloudflare.com/client/v4/zones?name=${DOMAIN}" \
+     -H "X-Auth-Email: ${CLOUDFLARE_EMAIL}" \
+     -H "X-Auth-Key: ${CLOUDFLARE_PASSWORD}" \
+     -H "Content-Type: application/json" | jq '.result | .[0].id' -r)
 
+    
+    echo "Zone ID: ${ZONE_ID}"
+    PUBLIC_IP=$(kubectl get service -n istio-system istio-ingressgateway -o json | jq '.status.loadBalancer.ingress | .[0].ip' -r)
+    echo "Public Ip ${PUBLIC_IP}"
+    # Create DNS Recored
+    echo "Creating DNS Recored..."
+    curl -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records" \
+     -H "X-Auth-Email: ${CLOUDFLARE_EMAIL}" \
+     -H "X-Auth-Key: ${CLOUDFLARE_PASSWORD}" \
+     -H "Content-Type: application/json" \
+     --data "{"type":"A","name":"${RELEASE_NAME}","content":"${PUBLIC_IP}","ttl":120,"priority":10,"proxied":false}"
+fi
 
 # Helming
 kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl apply -f -
