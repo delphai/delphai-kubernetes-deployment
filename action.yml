@@ -1,9 +1,12 @@
 name: "Deploy delphai microservices to Azure kubernetes in delphai's Infrastructure"
 description: "Deploy delphai microservices to Azure kubernetes in delphai's Infrastructure"
-author: "delpahi/devops"
+author: 'delpahi/devops'
 inputs:
+  image_sha:
+    description: 'Docker image SHA'
+    required: false
   delphai_enviroment:
-    description: 'Delphai Emviroment'
+    description: 'delphai Emviroment'
     required: true
   client_id:
     description: 'Client Id'
@@ -33,12 +36,9 @@ inputs:
     required: false
     default: 'false'
 
-
-
 runs:
-  using: "docker"
-  image: "Dockerfile"
+  using: 'docker'
+  image: 'Dockerfile'
 branding:
   icon: 'anchor'
   color: 'blue'
-  

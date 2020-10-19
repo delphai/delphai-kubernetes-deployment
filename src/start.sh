@@ -10,11 +10,15 @@ SECRET=$INPUT_CLIENT_SECRET
 TENANT_ID=$INPUT_TENANT_ID
 REPO_NAME=$REPOSITORY_NAME
 REPO_SLUG=$GITHUB_REF_SLUG
-IMAGE="delphai${DELPHAI_ENVIROMENT}.azurecr.io/${REPO_NAME}:${REPO_SLUG}"
+IMAGE=$INPUT_IMAGE_SHA
 HTTPPORT=$INPUT_HTTPPORT
 GRPCPORT=$INPUT_GRPCPORT
 IS_PUBLIC=$INPUT_IS_PUBLIC
 IS_UI=$INPUT_IS_UI
+
+if [ -z "$IMAGE" ]; then
+    IMAGE="delphai${DELPHAI_ENVIROMENT}.azurecr.io/${REPO_NAME}:${REPO_SLUG}"
+fi
 
 if [ "${REPO_NAME}" == "delphai-ui" ]; then
     REPO_NAME="app"
@@ -65,7 +69,7 @@ helm upgrade --install --wait --atomic \
 
 
 
-echo -e "\n\n\n\n\nenviroment:${DELPHAI_ENVIROMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nimage:${IMAGE},\nhttpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\n\n\n\n"
+echo -e "\n\n\n\n\nimage:${IMAGE},\nenviroment:${DELPHAI_ENVIROMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nimage:${IMAGE},\nhttpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\n\n\n\n"
 echo "██████  ███████ ██      ██████  ██   ██  █████  ██ ";
 echo "██   ██ ██      ██      ██   ██ ██   ██ ██   ██ ██ ";
 echo "██   ██ █████   ██      ██████  ███████ ███████ ██ ";
