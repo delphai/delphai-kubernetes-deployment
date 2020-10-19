@@ -51,7 +51,7 @@ if [ "${IS_UI}" == "true" ]; then
           --namespace=${REPO_NAME} \
           --set image=${IMAGE} \
           --set httpPort=${HTTPPORT} \
-          --set domain=${DOMAIN} \
+          --set domain=${DOMAIN} 
 fi
 
 echo "Using helm delphai-knative service"
