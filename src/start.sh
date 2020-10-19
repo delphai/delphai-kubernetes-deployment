@@ -52,10 +52,9 @@ if [ "${IS_UI}" == "true" ]; then
           --set image=${IMAGE} \
           --set httpPort=${HTTPPORT} \
           --set domain=${DOMAIN} 
-fi
-
-echo "Using helm delphai-knative service"
-helm upgrade --install --wait --atomic \
+else
+    echo "Using helm delphai-knative service"
+    helm upgrade --install --wait --atomic \
           ${RELEASE_NAME} \
           delphai/delphai-knative-service \
           --namespace=${REPO_NAME} \
@@ -67,7 +66,7 @@ helm upgrade --install --wait --atomic \
           --set domain=${DOMAIN} \
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
 
-
+fi
 
 echo -e "\n\n\n\n\nimage:${IMAGE},\nenviroment:${DELPHAI_ENVIROMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nimage:${IMAGE},\nhttpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\n\n\n\n"
 echo "██████  ███████ ██      ██████  ██   ██  █████  ██ ";
