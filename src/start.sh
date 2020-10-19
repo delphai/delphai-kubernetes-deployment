@@ -15,6 +15,7 @@ HTTPPORT=$INPUT_HTTPPORT
 GRPCPORT=$INPUT_GRPCPORT
 IS_PUBLIC=$INPUT_IS_PUBLIC
 IS_UI=$INPUT_IS_UI
+IS_GRPC=$INPUT_IS_GRPC
 
 if [ -z "$IMAGE" ]; then
     IMAGE="delphai${DELPHAI_ENVIROMENT}.azurecr.io/${REPO_NAME}:${REPO_SLUG}"
@@ -52,20 +53,32 @@ if [ "${IS_UI}" == "true" ]; then
           --set image=${IMAGE} \
           --set httpPort=${HTTPPORT} \
           --set domain=${DOMAIN} 
-else
-    echo "Using helm delphai-knative service"
+elif  [ "${IS_UI}" == "false" ] && [ "${IS_GRPC}" == "false" ] ; then
+    echo "Using helm delphai-knative service with grpc off"
     helm upgrade --install --wait --atomic \
           ${RELEASE_NAME} \
           delphai/delphai-knative-service \
           --namespace=${REPO_NAME} \
           --set image=${IMAGE} \
           --set httpPort=${HTTPPORT} \
-          --set grpcPort=${GRPCPORT} \
+          --set grpcPort="0000" \
           --set isPublic=${IS_PUBLIC} \
           --set isUi=${IS_UI} \
           --set domain=${DOMAIN} \
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
-
+elif  [ "${IS_UI}" == "false" ] && [ "${IS_GRPC}" == "true" ] ; then
+    echo "Using helm delphai-knative service with grpc on"
+    helm upgrade --install --wait --atomic \
+          ${RELEASE_NAME} \
+          delphai/delphai-knative-service \
+          --namespace=${REPO_NAME} \
+          --set image=${IMAGE} \
+          --set httpPort="0000" \
+          --set grpcPort=${GRPCPORT}\
+          --set isPublic=${IS_PUBLIC} \
+          --set isUi=${IS_UI} \
+          --set domain=${DOMAIN} \
+          --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
 fi
 
 echo -e "\n\n\n\n\nimage:${IMAGE},\nenviroment:${DELPHAI_ENVIROMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nimage:${IMAGE},\nhttpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\n\n\n\n"

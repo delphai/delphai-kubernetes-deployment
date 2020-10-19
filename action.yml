@@ -35,6 +35,11 @@ inputs:
     description: 'if ui repo'
     required: false
     default: 'false'
+  is_grpc:
+    description: 'if grpc repo'
+    required: false
+    default: 'false'
+
 
 runs:
   using: 'docker'
