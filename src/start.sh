@@ -61,7 +61,7 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_GRPC}" == "false" ] ; then
           --namespace=${REPO_NAME} \
           --set image=${IMAGE} \
           --set httpPort=${HTTPPORT} \
-          --set grpcPort=0000 \
+          --set grpcPort=${GRPCPORT} \
           --set isPublic=${IS_PUBLIC} \
           --set isUi=${IS_UI} \
           --set domain=${DOMAIN} \
@@ -73,7 +73,7 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_GRPC}" == "true" ] ; then
           delphai/delphai-knative-service \
           --namespace=${REPO_NAME} \
           --set image=${IMAGE} \
-          --set httpPort=0000 \
+          --set httpPort=${HTTPPORT} \
           --set grpcPort=${GRPCPORT}\
           --set isPublic=${IS_PUBLIC} \
           --set isUi=${IS_UI} \
