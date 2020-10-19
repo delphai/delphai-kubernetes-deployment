@@ -34,31 +34,23 @@ DOMAIN=$(kubectl get secret domain -o json --namespace default | jq .data.domain
 CLOUDFLARE_EMAIL=$(kubectl get secret cloudflare -o json --namespace default | jq .data.email -r | base64 -d)
 CLOUDFLARE_PASSWORD=$(kubectl get secret cloudflare -o json --namespace default | jq .data.password -r | base64 -d)
 
-if [ "${IS_UI}" == "true" ]; then
-    echo "IS UI is set to TRUE..."
-    echo "Getting Zone identifier"
-    ZONE_ID=$(curl -X GET "https://api.cloudflare.com/client/v4/zones?name=${DOMAIN}" \
-     -H "X-Auth-Email: ${CLOUDFLARE_EMAIL}" \
-     -H "X-Auth-Key: ${CLOUDFLARE_PASSWORD}" \
-     -H "Content-Type: application/json" | jq '.result | .[0].id' -r)
-
-    
-    echo "Zone ID: ${ZONE_ID}"
-    PUBLIC_IP=$(kubectl get service -n istio-system istio-ingressgateway -o json | jq '.status.loadBalancer.ingress | .[0].ip' -r)
-    echo "Public Ip ${PUBLIC_IP}"
-    # Create DNS Recored
-    echo "Creating DNS Recored..."
-    curl -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records" \
-     -H "X-Auth-Email: ${CLOUDFLARE_EMAIL}" \
-     -H "X-Auth-Key: ${CLOUDFLARE_PASSWORD}" \
-     -H "Content-Type: application/json" \
-     --data "{"type":"A","name":"${RELEASE_NAME}","content":"${PUBLIC_IP}","ttl":120,"priority":10,"proxied":false}"
-fi
-
-# Helming
+#Helming
 kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl apply -f -
 kubectl patch serviceaccount default --namespace ${REPO_NAME} -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
+
+if [ "${IS_UI}" == "true" ]; then
+    echo "Using helm delphai-with-ui"
+    helm upgrade --install --wait --atomic \
+          ${RELEASE_NAME} \
+          delphai/delphai-with-ui \
+          --namespace=${REPO_NAME} \
+          --set image=${IMAGE} \
+          --set httpPort=${HTTPPORT} \
+          --set domain=${DOMAIN} \
+fi
+
+echo "Using helm delphai-knative service"
 helm upgrade --install --wait --atomic \
           ${RELEASE_NAME} \
           delphai/delphai-knative-service \
