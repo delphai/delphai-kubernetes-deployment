@@ -52,7 +52,8 @@ if [ "${IS_UI}" == "true" ]; then
           --namespace=${REPO_NAME} \
           --set image=${IMAGE} \
           --set httpPort=${HTTPPORT} \
-          --set domain=${DOMAIN} 
+          --set domain=${DOMAIN} \
+          --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
 elif  [ "${IS_UI}" == "false" ] && [ "${IS_GRPC}" == "false" ] ; then
     echo "Using helm delphai-knative service with grpc off"
     helm upgrade --install --wait --atomic \
