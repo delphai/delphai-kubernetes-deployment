@@ -77,8 +77,6 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_GRPC}" == "true" ] ; then
           --set imageTag=${REPO_SLUG} \
           --set port=${GRPCPORT} \
           --set gatewayPort=${HTTPPORT}\
-          --set isPublic=${IS_PUBLIC} \
-          --set isUi=${IS_UI} \
           --set domain=${DOMAIN} \
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
 fi
