@@ -36,8 +36,6 @@ az login --service-principal --username $APP_ID --password $SECRET --tenant $TEN
 az aks get-credentials -n delphai-${DELPHAI_ENVIROMENT} -g tf-cluster 
 kubectl config current-context
 DOMAIN=$(kubectl get secret domain -o json --namespace default | jq .data.domain -r | base64 -d)
-CLOUDFLARE_EMAIL=$(kubectl get secret cloudflare -o json --namespace default | jq .data.email -r | base64 -d)
-CLOUDFLARE_PASSWORD=$(kubectl get secret cloudflare -o json --namespace default | jq .data.password -r | base64 -d)
 
 #Helming
 kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl apply -f -
