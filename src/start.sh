@@ -71,11 +71,12 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_GRPC}" == "true" ] ; then
     echo "Using helm delphai-knative service with grpc on"
     helm upgrade --install --wait --atomic \
           ${RELEASE_NAME} \
-          delphai/delphai-knative-service \
+          delphai/delphai-grpc-service \
           --namespace=${REPO_NAME} \
-          --set image=${IMAGE} \
-          --set httpPort=${HTTPPORT} \
-          --set grpcPort=${GRPCPORT}\
+          --set imageName=${IMAGE} \
+          --set imageTag=${REPO_SLUG} \
+          --set port=${GRPCPORT} \
+          --set gatewayPort=${HTTPPORT}\
           --set isPublic=${IS_PUBLIC} \
           --set isUi=${IS_UI} \
           --set domain=${DOMAIN} \
