@@ -39,6 +39,10 @@ inputs:
     description: 'if grpc repo'
     required: false
     default: 'false'
+  is_runner:
+    description: 'Minimum Scaling to one pod'
+    required: false
+    default: 'false'
 
 
 runs:

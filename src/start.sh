@@ -16,6 +16,7 @@ GRPCPORT=$INPUT_GRPCPORT
 IS_PUBLIC=$INPUT_IS_PUBLIC
 IS_UI=$INPUT_IS_UI
 IS_GRPC=$INPUT_IS_GRPC
+IS_RUNNER=$INPUT_IS_RUNNER
 
 if [ -z "$IMAGE" ]; then
     echo "Atrifact not set"
@@ -54,7 +55,7 @@ if [ "${IS_UI}" == "true" ]; then
           --set httpPort=${HTTPPORT} \
           --set domain=${DOMAIN} \
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
-elif  [ "${IS_UI}" == "false" ] && [ "${IS_GRPC}" == "false" ] ; then
+elif  [ "${IS_UI}" == "false" ]; then
     echo "Using helm delphai-knative service with grpc off"
     helm upgrade --install --wait --atomic \
           ${RELEASE_NAME} \
@@ -67,22 +68,10 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_GRPC}" == "false" ] ; then
           --set isUi=${IS_UI} \
           --set domain=${DOMAIN} \
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
-elif  [ "${IS_UI}" == "false" ] && [ "${IS_GRPC}" == "true" ] ; then
-    echo "Using helm delphai-knative service with grpc on"
-    helm upgrade --install --wait --atomic \
-          ${RELEASE_NAME} \
-          delphai/delphai-knative-service \
-          --namespace=${REPO_NAME} \
-          --set image=${IMAGE} \
-          --set httpPort=${HTTPPORT} \
-          --set grpcPort=${GRPCPORT} \
-          --set isPublic=${IS_PUBLIC} \
-          --set isUi=${IS_UI} \
-          --set domain=${DOMAIN} \
-          --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
+          --set isRunner=${IS_RUNNER}
 fi
 
-echo -e "\n\n\n\n\nimage:${IMAGE},\nenviroment:${DELPHAI_ENVIROMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nimage:${IMAGE},\nhttpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\n\n\n\n"
+echo -e "\n\n\n\n\nimage:${IMAGE},\nenviroment:${DELPHAI_ENVIROMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nhttpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\nis_runner:${IS_RUNNER}\n\n\n"
 echo "██████  ███████ ██      ██████  ██   ██  █████  ██ ";
 echo "██   ██ ██      ██      ██   ██ ██   ██ ██   ██ ██ ";
 echo "██   ██ █████   ██      ██████  ███████ ███████ ██ ";
