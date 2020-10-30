@@ -56,7 +56,7 @@ if [ "${IS_UI}" == "true" ]; then
           --set domain=${DOMAIN} \
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
 elif  [ "${IS_UI}" == "false" ]; then
-    echo "Using helm delphai-knative service with grpc off"
+    echo "Using helm delphai-knative service"
     helm upgrade --install --wait --atomic \
           ${RELEASE_NAME} \
           delphai/delphai-knative-service \
