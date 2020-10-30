@@ -67,7 +67,7 @@ elif  [ "${IS_UI}" == "false" ]; then
           --set isPublic=${IS_PUBLIC} \
           --set isUi=${IS_UI} \
           --set domain=${DOMAIN} \
-          --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
+          --set delphaiEnvironment=${DELPHAI_ENVIROMENT} \
           --set isRunner=${IS_RUNNER}
 fi
 
