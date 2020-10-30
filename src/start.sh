@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
-
+set -e
 # Variables
 CHART_NAME=delphai-knative-service
 CHART_VERSION=0.1.0
