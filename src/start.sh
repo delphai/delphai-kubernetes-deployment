@@ -70,8 +70,8 @@ elif  [ "${IS_UI}" == "false" ]; then
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT} \
           --set isRunner=${IS_RUNNER}
 fi
-
-echo -e "\n\n\n\n\nimage:${IMAGE},\nenviroment:${DELPHAI_ENVIROMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nhttpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\nis_runner:${IS_RUNNER}\n\n\n"
+echo -e "\e[32mImportantInfo"
+echo -e "\n\nimage:${IMAGE},\nenviroment:${DELPHAI_ENVIROMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nhttpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\nis_runner:${IS_RUNNER}\n\n\n"
 echo "██████  ███████ ██      ██████  ██   ██  █████  ██ ";
 echo "██   ██ ██      ██      ██   ██ ██   ██ ██   ██ ██ ";
 echo "██   ██ █████   ██      ██████  ███████ ███████ ██ ";
