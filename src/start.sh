@@ -45,7 +45,7 @@ kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl a
 kubectl patch serviceaccount default --namespace ${REPO_NAME} -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 
-if [ ["${IS_UI}" == "true"] && [ "${IS_MICROSERVICE}" == "false"] ]; then
+if  ["${IS_UI}" == "true"] && [ "${IS_MICROSERVICE}" == "false" ]; then
     echo "Using helm delphai-with-ui"
     helm upgrade --install --wait --atomic \
           ${RELEASE_NAME} \
@@ -55,7 +55,7 @@ if [ ["${IS_UI}" == "true"] && [ "${IS_MICROSERVICE}" == "false"] ]; then
           --set httpPort=${HTTPPORT} \
           --set domain=${DOMAIN} \
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
-elif  [ ["${IS_UI}" == "false"] && [ "${IS_MICROSERVICE}" == "false"] ]; then
+elif   ["${IS_UI}" == "false"] && [ "${IS_MICROSERVICE}" == "false" ]; then
     echo "Using helm delphai-knative service"
     helm upgrade --install --wait --atomic \
           ${RELEASE_NAME} \
@@ -68,7 +68,7 @@ elif  [ ["${IS_UI}" == "false"] && [ "${IS_MICROSERVICE}" == "false"] ]; then
           --set isUi=${IS_UI} \
           --set domain=${DOMAIN} \
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT} 
-elif [ ["${IS_UI}" == "false"] && [ "${IS_MICROSERVICE}" == "true"] ]; then
+elif  ["${IS_UI}" == "false"] && [ "${IS_MICROSERVICE}" == "true" ]; then
     echo "Using helm delphai-microservice service"
     helm upgrade --install --wait --atomic \
           ${RELEASE_NAME} \
