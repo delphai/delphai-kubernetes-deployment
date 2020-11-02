@@ -16,7 +16,7 @@ GRPCPORT=$INPUT_GRPCPORT
 IS_PUBLIC=$INPUT_IS_PUBLIC
 IS_UI=$INPUT_IS_UI
 IS_GRPC=$INPUT_IS_GRPC
-IS_RUNNER=$INPUT_IS_RUNNER
+IS_MICROSERVICE=$INPUT_MICROSERVICE
 
 if [ -z "$IMAGE" ]; then
     echo "Atrifact not set"
@@ -45,7 +45,7 @@ kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl a
 kubectl patch serviceaccount default --namespace ${REPO_NAME} -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 
-if [ "${IS_UI}" == "true" ]; then
+if [ ["${IS_UI}" == "true"] && [ "${IS_MICROSERVICE}" == "false"] ]; then
     echo "Using helm delphai-with-ui"
     helm upgrade --install --wait --atomic \
           ${RELEASE_NAME} \
@@ -55,7 +55,7 @@ if [ "${IS_UI}" == "true" ]; then
           --set httpPort=${HTTPPORT} \
           --set domain=${DOMAIN} \
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
-elif  [ "${IS_UI}" == "false" ]; then
+elif  [ ["${IS_UI}" == "false"] && [ "${IS_MICROSERVICE}" == "false"] ]; then
     echo "Using helm delphai-knative service"
     helm upgrade --install --wait --atomic \
           ${RELEASE_NAME} \
@@ -67,11 +67,20 @@ elif  [ "${IS_UI}" == "false" ]; then
           --set isPublic=${IS_PUBLIC} \
           --set isUi=${IS_UI} \
           --set domain=${DOMAIN} \
+          --set delphaiEnvironment=${DELPHAI_ENVIROMENT} 
+elif [ ["${IS_UI}" == "false"] && [ "${IS_MICROSERVICE}" == "true"] ]; then
+    echo "Using helm delphai-microservice service"
+    helm upgrade --install --wait --atomic \
+          ${RELEASE_NAME} \
+          delphai/delphai-microservice \
+          --namespace=${REPO_NAME} \
+          --set imageSHA=${IMAGE} \
+          --set replicas="1" \
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT} \
-          --set isRunner=${IS_RUNNER}
+          --set domain=${DOMAIN} 
 fi
 echo -e "\e[32mImportantInfo"
-echo -e "\n\nimage:${IMAGE},\nenviroment:${DELPHAI_ENVIROMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nhttpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\nis_runner:${IS_RUNNER}\n\n\n"
+echo -e "image:${IMAGE},\nenviroment:${DELPHAI_ENVIROMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nhttpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\nis_runner:${IS_RUNNER}\n\n\n"
 echo "██████  ███████ ██      ██████  ██   ██  █████  ██ ";
 echo "██   ██ ██      ██      ██   ██ ██   ██ ██   ██ ██ ";
 echo "██   ██ █████   ██      ██████  ███████ ███████ ██ ";
