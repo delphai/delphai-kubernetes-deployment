@@ -75,7 +75,7 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
           delphai/delphai-microservice \
           --namespace=${REPO_NAME} \
           --set imageSHA=${IMAGE} \
-          --set replicas="1" \
+          --set replicas=1 \
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT} \
           --set domain=${DOMAIN} 
 fi
