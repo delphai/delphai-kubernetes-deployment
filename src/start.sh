@@ -76,6 +76,9 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
           --namespace=${REPO_NAME} \
           --set imageSHA=${IMAGE} \
           --set replicas=1 \
+          --set gatewayPort=7070 \
+          --set deployGateway=false\
+          --set authRequired=false\
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT} \
           --set domain=${DOMAIN} 
 fi
