@@ -17,7 +17,6 @@ IS_PUBLIC=$INPUT_IS_PUBLIC
 IS_UI=$INPUT_IS_UI
 IS_GRPC=$INPUT_IS_GRPC
 IS_MICROSERVICE=$INPUT_MICROSERVICE
-FILE_SHARES=$INPUT_FILE_SHARES
 
 if [ -z "$IMAGE" ]; then
     echo "Atrifact not set"
@@ -82,7 +81,6 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
           --set authRequired=false\
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT} \
           --set domain=${DOMAIN} 
-          --set fileShares=$FILE_SHARES
 fi
 echo -e "\e[32mImportantInfo"
 echo -e "image:${IMAGE},\nenviroment:${DELPHAI_ENVIROMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nhttpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\nis_runner:${IS_RUNNER}\n\n\n"
