@@ -43,7 +43,10 @@ inputs:
     description: 'Minimum Scaling to one pod'
     required: false
     default: 'false'
-
+  file_shares:
+    description: 'file shares from azure to attach to the container'
+    required: false
+    default: '[]'
 
 runs:
   using: 'docker'
