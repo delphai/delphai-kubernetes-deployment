@@ -35,14 +35,13 @@ inputs:
     description: 'if ui repo'
     required: false
     default: 'false'
-  is_grpc:
-    description: 'if grpc repo'
-    required: false
-    default: 'false'
   microservice:
     description: 'Minimum Scaling to one pod'
     required: false
     default: 'false'
+  file_shares:
+    description: 'Specify the shared files as following *file1.txt,file2.txt*'
+    required: false
 
 
 runs:
