@@ -84,10 +84,7 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
           --set deployGateway=false\
           --set authRequired=false\
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT} \
-          --set domain=${DOMAIN} \
-        if [ ! -z "INPUT[*]" ]; then
-          --set fileShares=${INPUT[*]}
-        fi
+          --set domain=${DOMAIN} 
 
 fi
 echo -e "\e[32mImportantInfo"
