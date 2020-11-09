@@ -24,8 +24,8 @@ if [ -z "$IMAGE" ]; then
     IMAGE="delphai${DELPHAI_ENVIROMENT}.azurecr.io/${REPO_NAME}:${REPO_SLUG}"
 fi
 
-if [ ! -z "$FILE_SHARES" ]; then
-    IFS=', ' read -r -a FILES <<< ${FILE_SHARES} 
+if [ -z "$FILE_SHARES" ]; then
+    FILE_SHARES=""
 fi
 
 if [ "${REPO_NAME}" == "delphai-ui" ]; then
@@ -84,7 +84,9 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
           --set deployGateway=false\
           --set authRequired=false\
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT} \
-          --set domain=${DOMAIN} 
+          --set domain=${DOMAIN} \
+          --set fileShares=${FILE_SHARES}
+        
 
 fi
 echo -e "\e[32mImportantInfo"
