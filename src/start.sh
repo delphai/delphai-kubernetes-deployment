@@ -85,7 +85,7 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
           --set authRequired=false\
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT} \
           --set domain=${DOMAIN} \
-          --set fileShares=${FILE_SHARES}
+          --set fileShares="'${FILE_SHARES}'"
         
 
 fi
