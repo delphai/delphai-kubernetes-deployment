@@ -78,7 +78,7 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
           ${RELEASE_NAME} \
           delphai/delphai-microservice \
           --namespace=${REPO_NAME} \
-          --set imageSHA=${IMAGE} \
+          --set image=${IMAGE} \
           --set replicas=1 \
           --set gatewayPort=7070 \
           --set deployGateway=false\
