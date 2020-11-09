@@ -1,4 +1,4 @@
 #! /usr/bin/env bash
-FILE_SHARES={'A','A'} 
-fileShares="'${FILE_SHARES}'"
+FILE_SHARES={"a","a"} 
+fileShares="'${FILE_SHARES}\'"
 echo "$fileShares"
