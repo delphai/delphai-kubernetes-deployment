@@ -59,6 +59,8 @@ if  [ "${IS_UI}" == "true" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
           --set httpPort=${HTTPPORT} \
           --set domain=${DOMAIN} \
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
+    kubectl patch deployment ${RELEASE_NAME} --namespace delphai -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
+
 elif   [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
     echo "Using helm delphai-knative service"
     helm upgrade --install --wait --atomic \
