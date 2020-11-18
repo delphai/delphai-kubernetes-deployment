@@ -32,7 +32,7 @@ if [ "${REPO_NAME}" == "delphai-ui" ]; then
     REPO_NAME="app"
 fi
 
-if [ "${REPO_SLUG}" = "master" ]; then
+if [ "${REPO_SLUG}" = "master" ] || [ "${DELPHAI_ENVIRONMENT}" == "green" ] || [ "${DELPHAI_ENVIRONMENT}" == "live" ]; then
     RELEASE_NAME=${REPO_NAME}
 else
     RELEASE_NAME=${REPO_NAME}-${REPO_SLUG}
