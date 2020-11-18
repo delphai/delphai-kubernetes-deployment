@@ -49,6 +49,13 @@ kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl a
 kubectl patch serviceaccount default --namespace ${REPO_NAME} -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 
+if [ "${DELPHAI_ENVIRONMENT}" == "green" ] || [ "${DELPHAI_ENVIRONMENT}" == "live" ]; then
+    DELPHAI_ENVIROMENT_ENV_VAR=production
+else
+    DELPHAI_ENVIROMENT_ENV_VAR=${DELPHAI_ENVIRONMENT}
+fi
+
+
 if  [ "${IS_UI}" == "true" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
     echo "Using helm delphai-with-ui"
     helm upgrade --install --wait --atomic \
@@ -58,9 +65,8 @@ if  [ "${IS_UI}" == "true" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
           --set image=${IMAGE} \
           --set httpPort=${HTTPPORT} \
           --set domain=${DOMAIN} \
-          --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
+          --set delphaiEnvironment=${DELPHAI_ENVIROMENT_ENV_VAR}
     kubectl patch deployment ${RELEASE_NAME} --namespace ${REPO_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
-
 elif   [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
     echo "Using helm delphai-knative service"
     helm upgrade --install --wait --atomic \
@@ -73,7 +79,7 @@ elif   [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
           --set isPublic=${IS_PUBLIC} \
           --set isUi=${IS_UI} \
           --set domain=${DOMAIN} \
-          --set delphaiEnvironment=${DELPHAI_ENVIROMENT} 
+          --set delphaiEnvironment=${DELPHAI_ENVIROMENT_ENV_VAR} 
 elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
     echo "Using helm delphai-microservice service"
     helm upgrade --install --wait --atomic \
@@ -85,7 +91,7 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
           --set gatewayPort=7070 \
           --set deployGateway=false\
           --set authRequired=false\
-          --set delphaiEnvironment=${DELPHAI_ENVIROMENT} \
+          --set delphaiEnvironment=${DELPHAI_ENVIROMENT_ENV_VAR} \
           --set domain=${DOMAIN} \
           --set fileShares=${FILE_SHARES}
         
