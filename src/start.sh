@@ -32,7 +32,7 @@ if [ "${REPO_NAME}" == "delphai-ui" ]; then
     REPO_NAME="app"
 fi
 
-if [ "${REPO_SLUG}" = "master" ] || [ "${DELPHAI_ENVIRONMENT}" == "green" ] || [ "${DELPHAI_ENVIRONMENT}" == "live" ]; then
+if [ "${REPO_SLUG}" = "master" ] || [ "${DELPHAI_ENVIRONMENT}" == "GREEN" ] || [ "${DELPHAI_ENVIRONMENT}" == "LIVE" ]; then
     RELEASE_NAME=${REPO_NAME}
 else
     RELEASE_NAME=${REPO_NAME}-${REPO_SLUG}
@@ -49,7 +49,7 @@ kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl a
 kubectl patch serviceaccount default --namespace ${REPO_NAME} -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 
-if [ "${DELPHAI_ENVIRONMENT}" == "green" ] || [ "${DELPHAI_ENVIRONMENT}" == "live" ]; then
+if [ "${DELPHAI_ENVIRONMENT}" == "GREEN" ] || [ "${DELPHAI_ENVIRONMENT}" == "LIVE" ]; then
     DELPHAI_ENVIROMENT_ENV_VAR=production
 else
     DELPHAI_ENVIROMENT_ENV_VAR=${DELPHAI_ENVIRONMENT}
