@@ -42,6 +42,9 @@ inputs:
   file_shares:
     description: 'Specify the shared files as following *file1.txt,file2.txt*'
     required: false
+  domains:
+    description: "specify many domain for helm"
+    required: false
 
 
 runs:

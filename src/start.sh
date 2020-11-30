@@ -42,8 +42,12 @@ fi
 az login --service-principal --username $APP_ID --password $SECRET --tenant $TENANT_ID
 az aks get-credentials -n delphai-${DELPHAI_ENVIROMENT} -g tf-cluster 
 kubectl config current-context
-DOMAIN=$(kubectl get secret domain -o json --namespace default | jq .data.domain -r | base64 -d)
 
+if [ -z "$INPUT_DOMIANS" ]; then
+    DOMAINS=$(kubectl get secret domain -o json --namespace default | jq .data.domain -r | base64 -d)
+else
+    DOMAINS=$INPUT_DOMIANS
+fi
 #Helming
 kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl apply -f -
 kubectl patch serviceaccount default --namespace ${REPO_NAME} -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
@@ -57,7 +61,7 @@ if  [ "${IS_UI}" == "true" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
           --namespace=${REPO_NAME} \
           --set image=${IMAGE} \
           --set httpPort=${HTTPPORT} \
-          --set domain=${DOMAIN} \
+          --set domain=${DOMAINS} \
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT}
     kubectl patch deployment ${RELEASE_NAME} --namespace ${REPO_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
 
@@ -72,7 +76,7 @@ elif   [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
           --set grpcPort=${GRPCPORT} \
           --set isPublic=${IS_PUBLIC} \
           --set isUi=${IS_UI} \
-          --set domain=${DOMAIN} \
+          --set domain=${DOMAINS} \
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT} 
 elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
     echo "Using helm delphai-microservice service"
@@ -86,11 +90,10 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
           --set deployGateway=false\
           --set authRequired=false\
           --set delphaiEnvironment=${DELPHAI_ENVIROMENT} \
-          --set domain=${DOMAIN} \
-          --set fileShares=${FILE_SHARES}
-        
-
+          --set domain=${DOMAINS} \
+          --set fileShares=${FILE_SHARES}        
 fi
+
 echo -e "\e[32mImportantInfo"
 echo -e "image:${IMAGE},\nenviroment:${DELPHAI_ENVIROMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nhttpPort:${HTTPPORT}\ndomain:${DOMAIN},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\nis_runner:${IS_RUNNER}\n\n\n"
 echo "██████  ███████ ██      ██████  ██   ██  █████  ██ ";
