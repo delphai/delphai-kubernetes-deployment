@@ -51,6 +51,7 @@ fi
 #Helming
 kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl apply -f -
 kubectl patch serviceaccount default --namespace ${REPO_NAME} -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
+DOMAIN=$(kubectl get secret domain -o json --namespace default | jq .data.domain -r | base64 -d)
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 
 if [ "${DELPHAI_ENVIRONMENT}" == "GREEN" ] || [ "${DELPHAI_ENVIRONMENT}" == "LIVE" ]; then
@@ -68,7 +69,7 @@ if  [ "${IS_UI}" == "true" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
           --namespace=${REPO_NAME} \
           --set image=${IMAGE} \
           --set httpPort=${HTTPPORT} \
-          --set domain=${DOMAINS} \
+          --set domain=${DOMAIN} \
           --set domains=${DOMAINS} \
           --set delphaiEnvironment=${DELPHAI_ENVIRONMENT_ENV_VAR}
     kubectl patch deployment ${RELEASE_NAME} --namespace ${REPO_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
@@ -83,7 +84,7 @@ elif   [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
           --set grpcPort=${GRPCPORT} \
           --set isPublic=${IS_PUBLIC} \
           --set isUi=${IS_UI} \
-          --set domain=${DOMAINS} \
+          --set domain=${DOMAIN} \
           --set domains=${DOMAINS} \
           --set delphaiEnvironment=${DELPHAI_ENVIRONMENT_ENV_VAR} 
 elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
@@ -98,7 +99,7 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
           --set deployGateway=false\
           --set authRequired=false\
           --set delphaiEnvironment=${DELPHAI_ENVIRONMENT_ENV_VAR} \
-          --set domain=${DOMAINS} \
+          --set domain=${DOMAIN} \
           --set domains=${DOMAINS} \
           --set fileShares=${FILE_SHARES}
 fi
