@@ -38,16 +38,17 @@ else
     RELEASE_NAME=${REPO_NAME}-${REPO_SLUG}
 fi
 
+if [ -z "$INPUT_DOMAINS" ]; then
+    DOMAINS=""
+else
+    DOMAINS$INPUT_DOMAINS
+fi
 # Login and set context
 az login --service-principal --username $APP_ID --password $SECRET --tenant $TENANT_ID
 az aks get-credentials -n delphai-${DELPHAI_ENVIRONMENT} -g tf-cluster 
 kubectl config current-context
 
-if [ -z "$INPUT_DOMIANS" ]; then
-    DOMAINS=""
-else
-    DOMAINS=$INPUT_DOMIANS
-fi
+
 #Helming
 kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl apply -f -
 kubectl patch serviceaccount default --namespace ${REPO_NAME} -p "{\"imagePullSecrets\": [{\"name\": \"acr-credentials\"}]}"
@@ -105,7 +106,7 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
 fi
 
 echo -e "\e[32mImportantInfo"
-echo -e "image:${IMAGE},\nenviroment:${DELPHAI_ENVIRONMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nhttpPort:${HTTPPORT}\ndomain:${DOMAINS},\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\nis_runner:${IS_RUNNER}\n\n\n"
+echo -e "image:${IMAGE},\nenviroment:${DELPHAI_ENVIRONMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nhttpPort:${HTTPPORT}\ndomain:${DOMAIN},\ndomains:${DOMAINS}\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\nis_runner:${IS_RUNNER}\n\n\n"
 echo "██████  ███████ ██      ██████  ██   ██  █████  ██ ";
 echo "██   ██ ██      ██      ██   ██ ██   ██ ██   ██ ██ ";
 echo "██   ██ █████   ██      ██████  ███████ ███████ ██ ";
