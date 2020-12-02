@@ -41,7 +41,7 @@ fi
 if [ -z "$INPUT_DOMAINS" ]; then
     DOMAINS=""
 else
-    DOMAINS$INPUT_DOMAINS
+    DOMAINS=$INPUT_DOMAINS
 fi
 # Login and set context
 az login --service-principal --username $APP_ID --password $SECRET --tenant $TENANT_ID
