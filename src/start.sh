@@ -44,7 +44,7 @@ az aks get-credentials -n delphai-${DELPHAI_ENVIRONMENT} -g tf-cluster
 kubectl config current-context
 
 if [ -z "$INPUT_DOMIANS" ]; then
-    DOMAINS=$(kubectl get secret domain -o json --namespace default | jq .data.domain -r | base64 -d)
+    DOMAINS=""
 else
     DOMAINS=$INPUT_DOMIANS
 fi
@@ -62,18 +62,19 @@ fi
 
 if  [ "${IS_UI}" == "true" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
     echo "Using helm delphai-with-ui"
-    helm upgrade --install --wait --atomic \
+    helm upgrade --install --wait --atomic --reset-values\
           ${RELEASE_NAME} \
           delphai/delphai-with-ui \
           --namespace=${REPO_NAME} \
           --set image=${IMAGE} \
           --set httpPort=${HTTPPORT} \
           --set domain=${DOMAINS} \
+          --set domains=${DOMAINS} \
           --set delphaiEnvironment=${DELPHAI_ENVIRONMENT_ENV_VAR}
     kubectl patch deployment ${RELEASE_NAME} --namespace ${REPO_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
 elif   [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
     echo "Using helm delphai-knative service"
-    helm upgrade --install --wait --atomic \
+    helm upgrade --install --wait --atomic --reset-values\
           ${RELEASE_NAME} \
           delphai/delphai-knative-service \
           --namespace=${REPO_NAME} \
@@ -83,10 +84,11 @@ elif   [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
           --set isPublic=${IS_PUBLIC} \
           --set isUi=${IS_UI} \
           --set domain=${DOMAINS} \
+          --set domains=${DOMAINS} \
           --set delphaiEnvironment=${DELPHAI_ENVIRONMENT_ENV_VAR} 
 elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
     echo "Using helm delphai-microservice service"
-    helm upgrade --install --wait --atomic \
+    helm upgrade --install --wait --atomic --reset-values\
           ${RELEASE_NAME} \
           delphai/delphai-microservice \
           --namespace=${REPO_NAME} \
@@ -97,6 +99,7 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
           --set authRequired=false\
           --set delphaiEnvironment=${DELPHAI_ENVIRONMENT_ENV_VAR} \
           --set domain=${DOMAINS} \
+          --set domains=${DOMAINS} \
           --set fileShares=${FILE_SHARES}
 fi
 
