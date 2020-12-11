@@ -38,6 +38,12 @@ else
     RELEASE_NAME=${REPO_NAME}-${REPO_SLUG}
 fi
 
+if [ -z "$INPUT_SUBDOMAIN" ]; then
+    echo "No Subdomain"
+else
+    RELEASE_NAME="${REPO_NAME}-$INPUT_SUBDOMAIN"
+fi
+
 if [ -z "$INPUT_DOMAINS" ]; then
     DOMAINS=""
 else
