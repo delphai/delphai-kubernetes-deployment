@@ -115,3 +115,6 @@ echo "██   ██ ██      ██      ██    �
 echo "██████  ███████ ███████ ██      ██   ██ ██   ██ ██ ";
 echo "                                                   ";
 echo "                                                   ";
+
+unset -e
+python3 /app/logs/
