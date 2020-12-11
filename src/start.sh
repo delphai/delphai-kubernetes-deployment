@@ -72,7 +72,8 @@ if  [ "${IS_UI}" == "true" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
           --set httpPort=${HTTPPORT} \
           --set domain=${DOMAIN} \
           --set domains=${DOMAINS} \
-          --set delphaiEnvironment=${DELPHAI_ENVIRONMENT_ENV_VAR}
+          --set delphaiEnvironment=${DELPHAI_ENVIRONMENT_ENV_VAR} \
+          --set subdomain=$INPUT_SUBDOMAIN
     kubectl patch deployment ${RELEASE_NAME} --namespace ${REPO_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
 elif   [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
     echo "Using helm delphai-knative service"

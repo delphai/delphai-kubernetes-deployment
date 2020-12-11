@@ -45,6 +45,9 @@ inputs:
   domains:
     description: "specify many domain for helm"
     required: false
+  subdomain:
+    description: Subdomain for UI services
+    required: false
 
 
 runs:
