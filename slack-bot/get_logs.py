@@ -10,7 +10,7 @@ import os
 config.load_kube_config()
 now = datetime.datetime.now()
 DEPLOYMENT_CHANEL='C01FSQD0XNF'
-TOKEN='xoxb-225729104246-1448815445218-dg5WCy77BgSfOVJqXiLbwqaQ'
+TOKEN=''
 slack_client = WebClient(token=TOKEN)
 DEPLOYMENT_NAME = get_release()
 NAMESPACE = get_namespace()

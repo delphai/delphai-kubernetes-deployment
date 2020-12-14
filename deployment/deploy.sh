@@ -4,20 +4,13 @@ set -e
 REPO_NAME=$REPOSITORY_NAME
 REPO_SLUG=$GITHUB_REF_SLUG
 IMAGE=$INPUT_IMAGE_SHA
-HTTPPORT=$INPUT_HTTPPORT
-GRPCPORT=$INPUT_GRPCPORT
-IS_PUBLIC=$INPUT_IS_PUBLIC
-IS_UI=$INPUT_IS_UI
-IS_GRPC=$INPUT_IS_GRPC
-IS_MICROSERVICE=$INPUT_MICROSERVICE
-FILE_SHARES=$INPUT_FILE_SHARES
 
 if [ -z "$IMAGE" ]; then
     echo "Atrifact not set"
     IMAGE="delphai$INPUT_DELPHAI_ENVIROMENT.azurecr.io/${REPO_NAME}:${REPO_SLUG}"
 fi
 
-if [ -z "$FILE_SHARES" ]; then
+if [ -z "$INPUT_FILE_SHARES" ]; then
     FILE_SHARES=""
 fi
 
@@ -59,34 +52,34 @@ else
     DELPHAI_ENVIRONMENT_ENV_VAR=$INPUT_DELPHAI_ENVIROMENT
 fi
 
-if  [ "${IS_UI}" == "true" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
+if  [ "$INPUT_IS_UI" == "true" ] && [ "$INPUT_MICROSERVICE" == "false" ] ; then
     echo "Using helm delphai-with-ui"
     helm upgrade --install --wait --atomic --reset-values\
           ${RELEASE_NAME} \
           delphai/delphai-with-ui \
           --namespace=${REPO_NAME} \
           --set image=${IMAGE} \
-          --set httpPort=${HTTPPORT} \
+          --set httpPort=$INPUT_HTTPPORT \
           --set domain=${DOMAIN} \
           --set domains=${DOMAINS} \
           --set delphaiEnvironment=${DELPHAI_ENVIRONMENT_ENV_VAR} \
           --set subdomain=$INPUT_SUBDOMAIN
     kubectl patch deployment ${RELEASE_NAME} --namespace ${REPO_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
-elif   [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
+elif   [ "$INPUT_IS_UI" == "false" ] && [ "$INPUT_MICROSERVICE" == "false" ] ; then
     echo "Using helm delphai-knative service"
     helm upgrade --install --wait --atomic --reset-values\
           ${RELEASE_NAME} \
           delphai/delphai-knative-service \
           --namespace=${REPO_NAME} \
           --set image=${IMAGE} \
-          --set httpPort=${HTTPPORT} \
-          --set grpcPort=${GRPCPORT} \
-          --set isPublic=${IS_PUBLIC} \
-          --set isUi=${IS_UI} \
+          --set httpPort=$INPUT_HTTPPORT \
+          --set grpcPort=$INPUT_GRPCPORT \
+          --set isPublic=true \
+          --set isUi=$INPUT_IS_UI \
           --set domain=${DOMAIN} \
           --set domains=${DOMAINS} \
           --set delphaiEnvironment=${DELPHAI_ENVIRONMENT_ENV_VAR} 
-elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
+elif  [ "$INPUT_IS_UI" == "false" ] && [ "$INPUT_MICROSERVICE" == "true" ] ; then
     echo "Using helm delphai-microservice service"
     helm upgrade --install --wait --atomic --reset-values\
           ${RELEASE_NAME} \
