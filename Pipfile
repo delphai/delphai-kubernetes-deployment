@@ -18,6 +18,7 @@ pylint = "*"
 requests = "*"
 kubernetes = "*"
 slackclient = "*"
+slackeventsapi = "*"
 
 [requires]
 python_version = "3.8"

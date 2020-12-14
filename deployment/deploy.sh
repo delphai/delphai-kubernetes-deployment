@@ -1,13 +1,6 @@
 #! /usr/bin/env bash
 set -e
-# Variables
-CHART_NAME=delphai-knative-service
-CHART_VERSION=0.1.0
-DELPHAI_ENVIRONMENT=$INPUT_DELPHAI_ENVIROMENT
 
-APP_ID=$INPUT_CLIENT_ID
-SECRET=$INPUT_CLIENT_SECRET
-TENANT_ID=$INPUT_TENANT_ID
 REPO_NAME=$REPOSITORY_NAME
 REPO_SLUG=$GITHUB_REF_SLUG
 IMAGE=$INPUT_IMAGE_SHA
@@ -21,7 +14,7 @@ FILE_SHARES=$INPUT_FILE_SHARES
 
 if [ -z "$IMAGE" ]; then
     echo "Atrifact not set"
-    IMAGE="delphai${DELPHAI_ENVIRONMENT}.azurecr.io/${REPO_NAME}:${REPO_SLUG}"
+    IMAGE="delphai$INPUT_DELPHAI_ENVIROMENT.azurecr.io/${REPO_NAME}:${REPO_SLUG}"
 fi
 
 if [ -z "$FILE_SHARES" ]; then
@@ -32,10 +25,16 @@ if [ "${REPO_NAME}" == "delphai-ui" ]; then
     REPO_NAME="app"
 fi
 
-if [ "${REPO_SLUG}" = "master" ] || [ "${DELPHAI_ENVIRONMENT}" == "GREEN" ] || [ "${DELPHAI_ENVIRONMENT}" == "LIVE" ]; then
+if [ "${REPO_SLUG}" = "master" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "GREEN" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "LIVE" ]; then
     RELEASE_NAME=${REPO_NAME}
 else
     RELEASE_NAME=${REPO_NAME}-${REPO_SLUG}
+fi
+
+if [ -z "$INPUT_SUBDOMAIN" ]; then
+    echo "No Subdomain"
+else
+    RELEASE_NAME="${REPO_NAME}-$INPUT_SUBDOMAIN"
 fi
 
 if [ -z "$INPUT_DOMAINS" ]; then
@@ -44,10 +43,9 @@ else
     DOMAINS=$INPUT_DOMAINS
 fi
 # Login and set context
-az login --service-principal --username $APP_ID --password $SECRET --tenant $TENANT_ID
-az aks get-credentials -n delphai-${DELPHAI_ENVIRONMENT} -g tf-cluster 
+az login --service-principal --username $INPUT_CLIENT_ID --password $INPUT_CLIENT_SECRET --tenant $INPUT_TENANT_ID
+az aks get-credentials -n delphai-$INPUT_DELPHAI_ENVIROMENT -g tf-cluster 
 kubectl config current-context
-
 
 #Helming
 kubectl create namespace ${REPO_NAME} --output yaml --dry-run=client | kubectl apply -f -
@@ -55,12 +53,11 @@ kubectl patch serviceaccount default --namespace ${REPO_NAME} -p "{\"imagePullSe
 DOMAIN=$(kubectl get secret domain -o json --namespace default | jq .data.domain -r | base64 -d)
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 
-if [ "${DELPHAI_ENVIRONMENT}" == "GREEN" ] || [ "${DELPHAI_ENVIRONMENT}" == "LIVE" ]; then
+if [ "$INPUT_DELPHAI_ENVIROMENT" == "GREEN" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "LIVE" ]; then
     DELPHAI_ENVIRONMENT_ENV_VAR=production
 else
-    DELPHAI_ENVIRONMENT_ENV_VAR=${DELPHAI_ENVIRONMENT}
+    DELPHAI_ENVIRONMENT_ENV_VAR=$INPUT_DELPHAI_ENVIROMENT
 fi
-
 
 if  [ "${IS_UI}" == "true" ] && [ "${IS_MICROSERVICE}" == "false" ] ; then
     echo "Using helm delphai-with-ui"
@@ -106,15 +103,5 @@ elif  [ "${IS_UI}" == "false" ] && [ "${IS_MICROSERVICE}" == "true" ] ; then
           --set fileShares=${FILE_SHARES}
 fi
 
-echo -e "\e[32mImportantInfo"
-echo -e "image:${IMAGE},\nenviroment:${DELPHAI_ENVIRONMENT},\nrelease:${RELEASE_NAME},\nrepo_name:${REPO_NAME},\nrepo_slug:${REPO_SLUG},\nhttpPort:${HTTPPORT}\ndomain:${DOMAIN},\ndomains:${DOMAINS}\nIs_public:${IS_PUBLIC},\nIs_Ui:${IS_UI}\nis_runner:${IS_RUNNER}\n\n\n"
-echo "██████  ███████ ██      ██████  ██   ██  █████  ██ ";
-echo "██   ██ ██      ██      ██   ██ ██   ██ ██   ██ ██ ";
-echo "██   ██ █████   ██      ██████  ███████ ███████ ██ ";
-echo "██   ██ ██      ██      ██      ██   ██ ██   ██ ██ ";
-echo "██████  ███████ ███████ ██      ██   ██ ██   ██ ██ ";
-echo "                                                   ";
-echo "                                                   ";
-
-unset -e
-python3 /app/logs/
+# Logs
+python3.8 /app/slack-bot/get_logs.py

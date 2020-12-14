@@ -1,4 +1,3 @@
-FROM delphairegistry/helm:latest
+FROM delphairegistry/dind-az-kctl-helm:main 
 COPY . /app
-RUN apt install jq -y
-CMD /app/deploy.sh
+CMD /app/deployment/deploy.sh
