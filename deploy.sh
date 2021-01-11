@@ -28,7 +28,6 @@ if [ -z "$INPUT_DOMAINS" ]; then
 else
     DOMAINS=$INPUT_DOMAINS
 fi
-
 # Azure Login and set kubernetes cluster context
 az login --service-principal --username $INPUT_CLIENT_ID --password $INPUT_CLIENT_SECRET --tenant $INPUT_TENANT_ID
 az aks get-credentials -n delphai-$INPUT_DELPHAI_ENVIROMENT -g tf-cluster 
