@@ -3,7 +3,10 @@ set -e
 
 if [ -z "$INPUT_IMAGE_SHA" ]; then
     IMAGE="delphai$INPUT_DELPHAI_ENVIROMENT.azurecr.io/$REPOSITORY_NAME:$GITHUB_REF_SLUG"
+else
+    IMAGE=$INPUT_IMAGE_SHA
 fi
+
 
 if [ -z "$INPUT_FILE_SHARES" ]; then
     FILE_SHARES=""
