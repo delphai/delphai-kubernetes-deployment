@@ -35,6 +35,10 @@ inputs:
     description: 'if ui repo'
     required: false
     default: 'false'
+  is_grpc:
+    description: check if the repo grpc
+    required: false
+    default: 'false'
   microservice:
     description: 'Minimum Scaling to one pod'
     required: false
