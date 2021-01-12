@@ -54,7 +54,7 @@ fi
 if  [ "$INPUT_IS_UI" == "true" ] && [ "$INPUT_IS_GRPC" == "false" ] ; then
     echo "Using helm delphai-with-ui"
     helm upgrade --install --wait --atomic --reset-values\
-          $REPOSITORY_NAME \
+          ${RELEASE_NAME} \
           delphai/delphai-with-ui \
           --namespace=$REPOSITORY_NAME \
           --set image=${IMAGE} \
@@ -68,7 +68,7 @@ if  [ "$INPUT_IS_UI" == "true" ] && [ "$INPUT_IS_GRPC" == "false" ] ; then
 elif   [ "$INPUT_IS_UI" == "false" ] && [ "$INPUT_IS_GRPC" == "false" ] ; then
     echo "Using helm delphai-knative service"
     helm upgrade --install --wait --atomic --reset-values\
-          $REPOSITORY_NAME \
+          ${RELEASE_NAME} \
           delphai/delphai-knative-service \
           --namespace=$REPOSITORY_NAME \
           --set image=${IMAGE} \
@@ -83,7 +83,7 @@ elif   [ "$INPUT_IS_UI" == "false" ] && [ "$INPUT_IS_GRPC" == "false" ] ; then
 elif  [ "$INPUT_IS_UI" == "false" ] && [ "$INPUT_MICROSERVICE" == "true" ] ; then
     echo "Using helm delphai-microservice service"
     helm upgrade --install --wait --atomic --reset-values\
-          $REPOSITORY_NAME \
+          ${RELEASE_NAME} \
           delphai/delphai-microservice \
           --namespace=$REPOSITORY_NAME \
           --set image=${IMAGE} \
