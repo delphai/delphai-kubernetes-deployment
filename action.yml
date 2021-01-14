@@ -47,12 +47,14 @@ inputs:
     description: 'Specify the shared files as following *file1.txt,file2.txt*'
     required: false
   domains:
-    description: "specify many domain for helm"
+    description: 'specify many domain for helm'
     required: false
   subdomain:
     description: Subdomain for UI services
     required: false
-
+  replicas:
+    description: Number of replicas to deploy
+    required: false
 
 runs:
   using: 'docker'

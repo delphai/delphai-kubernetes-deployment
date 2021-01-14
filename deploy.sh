@@ -87,7 +87,7 @@ elif  [ "$INPUT_IS_UI" == "false" ] && [ "$INPUT_MICROSERVICE" == "true" ] ; the
           delphai/delphai-microservice \
           --namespace=$REPOSITORY_NAME \
           --set image=${IMAGE} \
-          --set replicas=1 \
+          --set replicas=${INPUT_REPLICAS:-1} \
           --set gatewayPort=7070 \
           --set deployGateway=false\
           --set authRequired=false\
