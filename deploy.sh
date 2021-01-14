@@ -65,21 +65,6 @@ if  [ "$INPUT_IS_UI" == "true" ] && [ "$INPUT_IS_GRPC" == "false" ] ; then
           --set subdomain=$INPUT_SUBDOMAIN
     kubectl patch deployment ${RELEASE_NAME} --namespace $REPOSITORY_NAME -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
 
-elif   [ "$INPUT_IS_UI" == "false" ] && [ "$INPUT_IS_GRPC" == "false" ] ; then
-    echo "Using helm delphai-knative service"
-    helm upgrade --install --wait --atomic --reset-values\
-          ${RELEASE_NAME} \
-          delphai/delphai-knative-service \
-          --namespace=$REPOSITORY_NAME \
-          --set image=${IMAGE} \
-          --set httpPort=$INPUT_HTTPPORT \
-          --set grpcPort=$INPUT_GRPCPORT \
-          --set isPublic=$INPUT_IS_PUBLIC \
-          --set isUi=$INPUT_IS_UI \
-          --set domain=${DOMAIN} \
-          --set domains=${DOMAINS} \
-          --set delphaiEnvironment=${DELPHAI_ENVIRONMENT_ENV_VAR} 
-
 elif  [ "$INPUT_IS_UI" == "false" ] && [ "$INPUT_MICROSERVICE" == "true" ] ; then
     echo "Using helm delphai-microservice service"
     helm upgrade --install --wait --atomic --reset-values\
@@ -95,6 +80,21 @@ elif  [ "$INPUT_IS_UI" == "false" ] && [ "$INPUT_MICROSERVICE" == "true" ] ; the
           --set domain=${DOMAIN} \
           --set domains=${DOMAINS} \
           --set fileShares=${FILE_SHARES}
+
+elif   [ "$INPUT_IS_UI" == "false" ] && [ "$INPUT_IS_GRPC" == "false" ] ; then
+    echo "Using helm delphai-knative service"
+    helm upgrade --install --wait --atomic --reset-values\
+          ${RELEASE_NAME} \
+          delphai/delphai-knative-service \
+          --namespace=$REPOSITORY_NAME \
+          --set image=${IMAGE} \
+          --set httpPort=$INPUT_HTTPPORT \
+          --set grpcPort=$INPUT_GRPCPORT \
+          --set isPublic=$INPUT_IS_PUBLIC \
+          --set isUi=$INPUT_IS_UI \
+          --set domain=${DOMAIN} \
+          --set domains=${DOMAINS} \
+          --set delphaiEnvironment=${DELPHAI_ENVIRONMENT_ENV_VAR} 
 fi
 
 echo "IMAGE:${IMAGE}\nENVIRONMENT:${DELPHAI_ENVIRONMENT_ENV_VAR}\nRELEASE:${RELEASE_NAME}\nREOSITORY:$REPOSITORY_NAME"
