@@ -14,6 +14,10 @@ else
     FILE_SHARES=$INPUT_FILE_SHARES
 fi
 
+if [ "$REPOSITORY_NAME" == "delphai-ui" ]; then
+    REPOSITORY_NAME="app"
+fi
+
 if [ "$GITHUB_REF_SLUG" = "master" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "GREEN" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "LIVE" ]; then
     RELEASE_NAME=$REPOSITORY_NAME
 else
