@@ -35,10 +35,21 @@ if [ -z "$INPUT_DOMAINS" ]; then
 else
     DOMAINS=$INPUT_DOMAINS
 fi
+
+if [ "$INPUT_DELPHAI_ENVIROMENT" == "GREEN" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "LIVE" ]; then
+    DELPHAI_ENVIRONMENT_ENV_VAR=production
+    az login --service-principal --username $INPUT_CLIENT_ID --password $INPUT_CLIENT_SECRET --tenant $INPUT_TENANT_ID
+    az aks get-credentials -n delphai-${INPUT_DELPHAI_ENVIROMENT,,} -g tf-delphai-${INPUT_DELPHAI_ENVIROMENT,,}-cluster 
+else
+    DELPHAI_ENVIRONMENT_ENV_VAR=$INPUT_DELPHAI_ENVIROMENT
+    az login --service-principal --username $INPUT_CLIENT_ID --password $INPUT_CLIENT_SECRET --tenant $INPUT_TENANT_ID
+    az aks get-credentials -n delphai-${INPUT_DELPHAI_ENVIROMENT,,} -g tf-cluster 
+fi
+
 # Azure Login and set kubernetes cluster context
-az login --service-principal --username $INPUT_CLIENT_ID --password $INPUT_CLIENT_SECRET --tenant $INPUT_TENANT_ID
-az aks get-credentials -n delphai-$INPUT_DELPHAI_ENVIROMENT -g tf-cluster 
+
 kubectl config current-context
+
 
 # Create namespace - patch service principle - set domain variable 
 kubectl create namespace $REPOSITORY_NAME --output yaml --dry-run=client | kubectl apply -f -
@@ -48,11 +59,7 @@ DOMAIN=$(kubectl get secret domain -o json --namespace default | jq .data.domain
 # Helm
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 
-if [ "$INPUT_DELPHAI_ENVIROMENT" == "GREEN" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "LIVE" ]; then
-    DELPHAI_ENVIRONMENT_ENV_VAR=production
-else
-    DELPHAI_ENVIRONMENT_ENV_VAR=$INPUT_DELPHAI_ENVIROMENT
-fi
+
 
 # Helm Delphai with Ui
 if  [ "$INPUT_IS_UI" == "true" ] && [ "$INPUT_IS_GRPC" == "false" ] ; then
