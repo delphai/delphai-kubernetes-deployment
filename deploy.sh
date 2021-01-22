@@ -49,7 +49,8 @@ fi
 # Azure Login and set kubernetes cluster context
 
 kubectl config current-context
-
+echo "IMAGE:${IMAGE}\nENVIRONMENT:${DELPHAI_ENVIRONMENT_ENV_VAR}\nRELEASE:${RELEASE_NAME}\nREPOSITORY:$REPOSITORY_NAME"
+echo "BRANCH:$GITHUB_REF_SLUG\nHTTP:$INPUT_HTTPPORT\nDOMAIN:${DOMAIN}\nDOMAINS:${DOMAINS}\nIs_Ui:$INPUT_IS_UI"
 
 # Create namespace - patch service principle - set domain variable 
 kubectl create namespace $REPOSITORY_NAME --output yaml --dry-run=client | kubectl apply -f -
@@ -59,8 +60,7 @@ DOMAIN=$(kubectl get secret domain -o json --namespace default | jq .data.domain
 # Helm
 helm repo add delphai https://delphai.github.io/helm-charts && helm repo update
 
-echo "IMAGE:${IMAGE}\nENVIRONMENT:${DELPHAI_ENVIRONMENT_ENV_VAR}\nRELEASE:${RELEASE_NAME}\nREOSITORY:$REPOSITORY_NAME"
-echo "BRANCH:$GITHUB_REF_SLUG\nHTTP:$INPUT_HTTPPORT\nDOMAIN:${DOMAIN}\nDOMAINS:${DOMAINS}\nIs_Ui:$INPUT_IS_UI"
+
 
 # Helm Delphai with Ui
 if  [ "$INPUT_IS_UI" == "true" ] && [ "$INPUT_IS_GRPC" == "false" ] ; then
