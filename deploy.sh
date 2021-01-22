@@ -45,7 +45,8 @@ else
     az login --service-principal --username $INPUT_CLIENT_ID --password $INPUT_CLIENT_SECRET --tenant $INPUT_TENANT_ID
     az aks get-credentials -n delphai-${INPUT_DELPHAI_ENVIROMENT,,} -g tf-cluster 
 fi
-
+echo "IMAGE:${IMAGE}\nENVIRONMENT:${DELPHAI_ENVIRONMENT_ENV_VAR}\nRELEASE:${RELEASE_NAME}\nREOSITORY:$REPOSITORY_NAME"
+echo "BRANCH:$GITHUB_REF_SLUG\nHTTP:$INPUT_HTTPPORT\nDOMAIN:${DOMAIN}\nDOMAINS:${DOMAINS}\nIs_Ui:$INPUT_IS_UI"
 # Azure Login and set kubernetes cluster context
 
 kubectl config current-context
@@ -107,6 +108,3 @@ elif   [ "$INPUT_IS_UI" == "false" ] && [ "$INPUT_IS_GRPC" == "false" ] ; then
           --set domains=${DOMAINS} \
           --set delphaiEnvironment=${DELPHAI_ENVIRONMENT_ENV_VAR} 
 fi
-
-echo "IMAGE:${IMAGE}\nENVIRONMENT:${DELPHAI_ENVIRONMENT_ENV_VAR}\nRELEASE:${RELEASE_NAME}\nREOSITORY:$REPOSITORY_NAME"
-echo "BRANCH:$GITHUB_REF_SLUG\nHTTP:$INPUT_HTTPPORT\nDOMAIN:${DOMAIN}\nDOMAINS:${DOMAINS}\nIs_Ui:$INPUT_IS_UI"
