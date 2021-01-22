@@ -18,7 +18,7 @@ if [ "$REPOSITORY_NAME" == "delphai-ui" ]; then
     REPOSITORY_NAME="app"
 fi
 
-if [ "$GITHUB_REF_SLUG" = "master" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "GREEN" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "LIVE" ]; then
+if [ "$GITHUB_REF_SLUG" = "master" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "green" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "live" ]; then
     RELEASE_NAME=$REPOSITORY_NAME
 else
     RELEASE_NAME="$REPOSITORY_NAME-$GITHUB_REF_SLUG"
@@ -36,7 +36,7 @@ else
     DOMAINS=$INPUT_DOMAINS
 fi
 
-if [ "$INPUT_DELPHAI_ENVIROMENT" == "GREEN" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "LIVE" ]; then
+if [ "$INPUT_DELPHAI_ENVIROMENT" == "green" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "live" ]; then
     DELPHAI_ENVIRONMENT_ENV_VAR=production
     az login --service-principal --username $INPUT_CLIENT_ID --password $INPUT_CLIENT_SECRET --tenant $INPUT_TENANT_ID
     az aks get-credentials -n delphai-${INPUT_DELPHAI_ENVIROMENT,,} -g tf-delphai-${INPUT_DELPHAI_ENVIROMENT,,}-cluster 
