@@ -18,7 +18,7 @@ if [ "$REPOSITORY_NAME" == "delphai-ui" ]; then
     REPOSITORY_NAME="app"
 fi
 
-if [ "$GITHUB_REF_SLUG" = "master" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "green" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "live" ]; then
+if [ "$GITHUB_REF_SLUG" = "master" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "GREEN" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "LIVE" ]; then
     RELEASE_NAME=$REPOSITORY_NAME
 else
     RELEASE_NAME="$REPOSITORY_NAME-$GITHUB_REF_SLUG"
@@ -33,10 +33,10 @@ fi
 if [ -z "$INPUT_DOMAINS" ]; then
     DOMAINS=""
 else
-    DOMAINS=$INPUT_DOMAINS
+    DOMAINS=${INPUT_DOMAINS,,}
 fi
 
-if [ "$INPUT_DELPHAI_ENVIROMENT" == "green" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "live" ]; then
+if [ "$INPUT_DELPHAI_ENVIROMENT" == "GREEN" ] || [ "$INPUT_DELPHAI_ENVIROMENT" == "LIVE" ]; then
     DELPHAI_ENVIRONMENT_ENV_VAR=production
     az login --service-principal --username $INPUT_CLIENT_ID --password $INPUT_CLIENT_SECRET --tenant $INPUT_TENANT_ID
     az aks get-credentials -n delphai-${INPUT_DELPHAI_ENVIROMENT,,} -g tf-delphai-${INPUT_DELPHAI_ENVIROMENT,,}-cluster 
@@ -49,8 +49,7 @@ fi
 # Azure Login and set kubernetes cluster context
 
 kubectl config current-context
-echo "IMAGE:${IMAGE}\nENVIRONMENT:${DELPHAI_ENVIRONMENT_ENV_VAR}\nRELEASE:${RELEASE_NAME}\nREPOSITORY:$REPOSITORY_NAME"
-echo "BRANCH:$GITHUB_REF_SLUG\nHTTP:$INPUT_HTTPPORT\nDOMAIN:${DOMAIN}\nDOMAINS:${DOMAINS}\nIs_Ui:$INPUT_IS_UI"
+
 
 # Create namespace - patch service principle - set domain variable 
 kubectl create namespace $REPOSITORY_NAME --output yaml --dry-run=client | kubectl apply -f -
@@ -109,3 +108,5 @@ elif   [ "$INPUT_IS_UI" == "false" ] && [ "$INPUT_IS_GRPC" == "false" ] ; then
           --set delphaiEnvironment=${DELPHAI_ENVIRONMENT_ENV_VAR} 
 fi
 
+echo "IMAGE:${IMAGE}\nENVIRONMENT:${DELPHAI_ENVIRONMENT_ENV_VAR}\nRELEASE:${RELEASE_NAME}\nREOSITORY:$REPOSITORY_NAME"
+echo "BRANCH:$GITHUB_REF_SLUG\nHTTP:$INPUT_HTTPPORT\nDOMAIN:${DOMAIN}\nDOMAINS:${DOMAINS}\nIs_Ui:$INPUT_IS_UI"
