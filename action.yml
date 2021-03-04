@@ -55,6 +55,12 @@ inputs:
   replicas:
     description: Number of replicas to deploy
     required: false
+  min_scale:
+    description: Minimum scale for knative service
+    default: 1
+  concurrency:
+    description: Concurrency of knative service
+    default: 100
 
 runs:
   using: 'docker'

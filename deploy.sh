@@ -106,5 +106,7 @@ elif   [ "$INPUT_IS_UI" == "false" ] && [ "$INPUT_IS_GRPC" == "false" ] ; then
           --set isUi=$INPUT_IS_UI \
           --set domain=${DOMAIN} \
           --set domains=${DOMAINS} \
+          --set minScale=${INPUT_MIN_SCALE} \
+          --set concurrency=${INPUT_CONCURRENCY} \
           --set delphaiEnvironment=${DELPHAI_ENVIRONMENT_ENV_VAR} 
 fi
