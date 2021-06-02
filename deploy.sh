@@ -40,7 +40,7 @@ if [ "$INPUT_DELPHAI_ENVIROMENT" == "GREEN" ] || [ "$INPUT_DELPHAI_ENVIROMENT" =
     DELPHAI_ENVIRONMENT_ENV_VAR=production
     az login --service-principal --username $INPUT_CLIENT_ID --password $INPUT_CLIENT_SECRET --tenant $INPUT_TENANT_ID
     az aks get-credentials -n delphai-${INPUT_DELPHAI_ENVIROMENT,,} -g tf-delphai-${INPUT_DELPHAI_ENVIROMENT,,}-cluster
-elif [ "$INPUT_DELPHAI_ENVIROMENT" == "review"]; then
+elif [ "$INPUT_DELPHAI_ENVIROMENT" == "REVIEW"]; then
     DELPHAI_ENVIRONMENT_ENV_VAR=review
     az login --service-principal --username $INPUT_CLIENT_ID --password $INPUT_CLIENT_SECRET --tenant $INPUT_TENANT_ID
     az aks get-credentials -n delphai-${INPUT_DELPHAI_ENVIROMENT,,} -g tf-${INPUT_DELPHAI_ENVIROMENT,,}-cluster 
